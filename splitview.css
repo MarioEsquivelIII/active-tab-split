@@ -27,18 +27,21 @@ h1 {
 }
 #panels {
   margin: 0 auto;
-  padding: 1.5rem 0.5rem 2rem 0.5rem;
-  max-width: 1600px;
-  min-height: 70vh;
+  padding: 1.5rem;
+  max-width: 95vw;
+  min-height: 85vh;
+  height: 85vh;
   border-radius: 18px;
   background: rgba(36,39,46,0.7);
   box-shadow: 0 4px 32px rgba(37,99,235,0.08);
+  border: solid rebeccapurple 5px;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 .panels {
   width: 100%;
-  height: 70vh;
+  height: 100%;
   gap: 1rem;
-  margin-top: 1rem;
   display: grid;
 }
 .one-panel {
@@ -58,11 +61,15 @@ h1 {
   border-radius: 14px;
   box-shadow: 0 2px 12px rgba(37,99,235,0.07);
   background: #23272f;
-  margin: 0.5rem;
   overflow: hidden;
   border: 1.5px solid #374151;
   display: flex;
   flex-direction: column;
+  min-width: 350px;
+  min-height: 350px;
+  max-width: 95vw;
+  max-height: 75vh;
+  flex: 1 1 0;
 }
 .panel input {
   padding: 0.5rem;
@@ -84,7 +91,8 @@ h1 {
 }
 .bottom-note {
   max-width: 900px;
-  margin: 2.5rem auto 1.5rem auto;
+  height: 60px;
+  margin: 150px auto 1.5rem auto;
   background: #23272f;
   color: #e5e7eb;
   border-radius: 10px;
@@ -93,4 +101,19 @@ h1 {
   font-size: 1.08rem;
   text-align: center;
   border: 1.5px solid #374151;
+}
+
+#tip-section{
+  line-height: 60px;
+}
+
+.bottom-row-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+  gap: 2rem;
+  max-width: 1800px;
+  margin: 2.5rem auto 1.5rem auto;
+  flex-wrap: wrap;
 } 

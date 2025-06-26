@@ -127,8 +127,12 @@ window.onload = function () {
     const numPanels = urlParams.filter(Boolean).length;
     const hasSplit = numPanels > 0;
 
-    let layout = hasSplit ? numPanels : 1;
-    let urls = hasSplit ? [leftUrl || '', rightUrl || '', panel3Url || '', panel4Url || ''] : ['', '', '', ''];
+    let layout = 1;
+    let urls = ['', '', '', ''];
+    if (hasSplit) {
+        layout = numPanels;
+        urls = [leftUrl || '', rightUrl || '', panel3Url || '', panel4Url || ''];
+    }
 
     // If not split, show a simple layout picker and update on change
     if (!hasSplit) {
@@ -141,4 +145,18 @@ window.onload = function () {
     }
 
     renderPanels(layout, urls, hasSplit);
-}; 
+};
+
+window.addEventListener('keydown', function (e) {
+    if (e.altKey && (e.key === 'a' || e.key === 'A')) {
+        // Open the popup window (mini-app)
+        if (chrome && chrome.windows && chrome.runtime && chrome.runtime.getURL) {
+            chrome.windows.create({
+                url: chrome.runtime.getURL('popup.html'),
+                type: 'popup',
+                width: 420,
+                height: 600
+            });
+        }
+    }
+}); 

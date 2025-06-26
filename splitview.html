@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
 </head>
 <body>
-  <h1 style="margin:1rem;">Active Tab Split</h1>
+  <h1 style="margin:1rem; text-align: center;">Active Tab Split</h1>
   <select id="layout-picker">
     <option value="1">1 Panel</option>
     <option value="2">2 Panels</option>
@@ -14,8 +14,13 @@
     <option value="4">4 Panels</option>
   </select>
   <div id="panels"></div>
-  <div class="bottom-note">
-    <b>Note:</b> Some sites (like Google, Facebook, etc.) do <b>not</b> allow themselves to be displayed in iframes. If you see a browser error or a sad file icon, please open the site in a new tab.
+  <div class="bottom-row-container">
+    <div class="bottom-note" style="margin-bottom:0.5rem;" id="tip-section">
+      <b>Tip:</b> Press <b>Alt + A</b> to open the layout popup window, or use the extension icon as usual.
+    </div>
+    <div class="bottom-note">
+      <b>Note:</b> Some sites (like Google, Facebook, etc.) do <b>not</b> allow themselves to be displayed in iframes. If you see a browser error or a sad file icon, please open the site in a new tab.
+    </div>
   </div>
   <script src="splitview.js"></script>
 </body>
