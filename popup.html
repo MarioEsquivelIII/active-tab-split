@@ -126,6 +126,16 @@
   <h3>Assign Tabs to Panels</h3>
   <form id="splitForm">
     <div id="tabSelectors"></div>
+    <div style="margin-bottom: 1rem;">
+      <label>
+        <input type="radio" name="openMode" value="current" checked>
+        Open in current tab
+      </label>
+      <label style="margin-left: 1.5em;">
+        <input type="radio" name="openMode" value="new">
+        Open in new tab
+      </label>
+    </div>
     <button type="submit" class="submit-btn">Split!</button>
   </form>
   <script src="popup.js"></script>

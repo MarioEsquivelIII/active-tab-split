@@ -11,6 +11,50 @@ const layoutPanelCount = {
     '2x2-grid': 4
 };
 
+const knownBlockedSites = [
+    'netflix.com',
+    'google.com',
+    'facebook.com',
+    'instagram.com',
+    'disneyplus.com',
+    'hulu.com',
+    'primevideo.com',
+    'hbomax.com',
+    'tiktok.com',
+    'apple.com',
+    'microsoft.com',
+    'dropbox.com',
+    'paypal.com',
+    'bankofamerica.com',
+    'chase.com',
+    'wellsfargo.com',
+    'twitter.com',
+    'x.com',
+    'linkedin.com',
+    'outlook.com',
+    'mail.google.com',
+    'drive.google.com',
+    'docs.google.com',
+    'github.com'
+];
+
+function isLikelyBlocked(url) {
+    try {
+        const { hostname } = new URL(url);
+        return knownBlockedSites.some(domain =>
+            hostname === domain || hostname.endsWith('.' + domain)
+        );
+    } catch {
+        return false;
+    }
+}
+
+function warnIfBlocked(url) {
+    if (isLikelyBlocked(url)) {
+        alert('Warning: This site is known to block embedding in iframes and may not display.');
+    }
+}
+
 function renderTabSelectors() {
     const container = document.getElementById('tabSelectors');
     container.innerHTML = '';
@@ -18,13 +62,27 @@ function renderTabSelectors() {
         const select = document.createElement('select');
         select.name = `panel${i + 1}`;
         select.required = true;
+        const blankOption = document.createElement('option');
+        blankOption.value = '';
+        blankOption.textContent = '-- Select a tab --';
+        blankOption.disabled = false;
+        blankOption.selected = true;
+        select.appendChild(blankOption);
         allTabs.forEach(tab => {
-            if (tab.url.startsWith('http://') || tab.url.startsWith('https://')) {
+            if (
+                (tab.url.startsWith('http://') || tab.url.startsWith('https://')) &&
+                !isLikelyBlocked(tab.url)
+            ) {
                 const option = document.createElement('option');
                 option.value = tab.id;
                 option.textContent = tab.title || tab.url;
                 select.appendChild(option);
             }
+        });
+        select.addEventListener('change', (e) => {
+            const tabId = parseInt(e.target.value, 10);
+            const tab = allTabs.find(t => t.id === tabId);
+            if (tab) warnIfBlocked(tab.url);
         });
         container.appendChild(document.createTextNode(`Panel ${i + 1}: `));
         container.appendChild(select);
@@ -67,8 +125,13 @@ document.getElementById('splitForm').onsubmit = async (e) => {
     if (tabUrls[1]) url += `&right=${encodeURIComponent(tabUrls[1])}`;
     if (tabUrls[2]) url += `&panel3=${encodeURIComponent(tabUrls[2])}`;
     if (tabUrls[3]) url += `&panel4=${encodeURIComponent(tabUrls[3])}`;
-    // Update the current tab to the splitview page
-    chrome.tabs.update(window.activeTabId, { url });
+    // Open in current tab or new tab based on user selection
+    const openMode = form.elements['openMode'].value;
+    if (openMode === 'new') {
+        chrome.tabs.create({ url });
+    } else {
+        chrome.tabs.update(window.activeTabId, { url });
+    }
 };
 
 // Persist and restore popup state
