@@ -4,69 +4,124 @@
   <title>Active Tab Split</title>
   <meta charset="UTF-8">
   <style>
-    body { font-family: sans-serif; margin: 16px; }
-    .layout-options { display: flex; gap: 8px; margin-bottom: 12px; }
-    .layout-btn { padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; }
-    .layout-btn.selected { background: #007bff; color: #fff; }
-    .tab-list { margin-bottom: 12px; }
-    .tab-item { margin-bottom: 4px; }
-    .submit-btn { padding: 8px 16px; background: #007bff; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
-
-    /* Layout Picker CSS from deleted file */
-    .layout-picker {
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 16px;
+      background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+      color: #222;
+    }
+    h3 {
+      margin-top: 0;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .snap-layouts-grid {
       display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
+      gap: 18px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-start;
     }
     .layout-btn {
-      border: 2px solid #ccc;
-      background: #fff;
-      padding: 0.5rem;
-      border-radius: 8px;
+      border: none;
+      background: none;
+      padding: 0;
+      border-radius: 12px;
       cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: border 0.2s;
+      transition: transform 0.15s cubic-bezier(.4,2,.6,1), box-shadow 0.15s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      outline: none;
+      position: relative;
     }
-    .layout-btn.selected {
-      border-color: #007bff;
+    .layout-btn .snap-icon {
+      width: 56px;
+      height: 38px;
+      border-radius: 10px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+      border: 2px solid #e0e7ff;
+      transition: border 0.2s, box-shadow 0.2s;
     }
-    .layout-icon {
-      width: 48px;
-      height: 32px;
-      margin-bottom: 0.25rem;
-      background: #eee;
-      border-radius: 4px;
-      display: flex;
-      flex-wrap: wrap;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    .layout-btn.selected .snap-icon {
+      border: 2.5px solid #2563eb;
+      box-shadow: 0 0 0 3px #93c5fd;
     }
-    .layout-1 {
-      background: #007bff;
+    .layout-btn:hover, .layout-btn:focus {
+      transform: scale(1.08);
+      z-index: 2;
     }
-    .layout-2 {
-      background: linear-gradient(90deg, #007bff 50%, #eee 50%);
+    .layout-btn:active {
+      transform: scale(0.97);
     }
-    .layout-3 {
-      background: linear-gradient(90deg, #007bff 33%, #eee 33% 66%, #007bff 66%);
+    .one-vertical {
+      background: linear-gradient(90deg, #2563eb 100%, #dbeafe 0);
     }
-    .layout-4 {
+    .two-vertical {
+      background: linear-gradient(90deg, #2563eb 50%, #dbeafe 50%);
+    }
+    .three-vertical {
+      background: linear-gradient(90deg, #2563eb 33%, #dbeafe 33% 66%, #2563eb 66%);
+    }
+    .two-by-two {
       background:
-        linear-gradient(90deg, #007bff 50%, #eee 50%),
-        linear-gradient(#007bff 50%, #eee 50%);
+        linear-gradient(90deg, #2563eb 50%, #dbeafe 50%),
+        linear-gradient(180deg, #2563eb 50%, #dbeafe 50%);
       background-size: 100% 50%, 100% 100%;
       background-position: 0 0, 0 0;
       background-repeat: no-repeat;
+    }
+    .submit-btn {
+      padding: 10px 22px;
+      background: linear-gradient(90deg, #2563eb 60%, #60a5fa 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+      transition: 0.2s, transform 0.15s;
+    }
+    .submit-btn:hover, .submit-btn:focus {
+      background: linear-gradient(90deg, #1d4ed8 60%, #60a5fa 100%);
+      transform: scale(1.04);
+    }
+    .submit-btn:active {
+      background: linear-gradient(90deg, #1e40af 60%, #3b82f6 100%);
+      transform: scale(0.97);
+    }
+    select {
+      border-radius: 6px;
+      border: 1.5px solid #c7d2fe;
+      padding: 6px 10px;
+      margin: 0 0 8px 0;
+      font-size: 1rem;
+      background: #f1f5f9;
+      transition: border 0.2s;
+    }
+    select:focus {
+      border: 1.5px solid #2563eb;
+      outline: none;
+    }
+    #tabSelectors {
+      margin-bottom: 18px;
     }
   </style>
 </head>
 <body>
   <h3>Choose Layout</h3>
-  <div class="layout-options">
-    <button class="layout-btn" data-panels="2">2 Panels</button>
-    <button class="layout-btn" data-panels="3">3 Panels</button>
-    <button class="layout-btn" data-panels="4">4 Panels</button>
+  <div class="snap-layouts-grid">
+    <button class="layout-btn" data-layout="1-vertical" title="1 Panel">
+      <div class="snap-icon one-vertical"></div>
+    </button>
+    <button class="layout-btn" data-layout="2-vertical" title="2 Vertical">
+      <div class="snap-icon two-vertical"></div>
+    </button>
+    <button class="layout-btn" data-layout="3-vertical" title="3 Vertical">
+      <div class="snap-icon three-vertical"></div>
+    </button>
+    <button class="layout-btn" data-layout="2x2-grid" title="2x2 Grid">
+      <div class="snap-icon two-by-two"></div>
+    </button>
   </div>
   <h3>Assign Tabs to Panels</h3>
   <form id="splitForm">

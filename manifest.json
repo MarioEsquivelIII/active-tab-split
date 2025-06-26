@@ -4,12 +4,10 @@
     "version": "1.0",
     "description": "Split your Chrome window to view two tabs side by side.",
     "permissions": [
-        "tabs"
+        "tabs",
+        "storage"
     ],
     "host_permissions": [
         "<all_urls>"
-    ],
-    "action": {
-        "default_popup": "popup.html"
-    }
+    ]
 }

@@ -79,15 +79,14 @@ function renderPanels(layout, urls, hasSplit) {
         // Add a timeout to detect if the iframe is blocked
         if (urls[idx] && !iframe.src.startsWith('https://www.youtube.com/embed/')) {
             setTimeout(() => {
-                // Only check for blank iframe (if accessible)
-                let isBlank = false;
+                let blocked = false;
                 try {
-                    isBlank = iframe.contentDocument && iframe.contentDocument.body && iframe.contentDocument.body.innerHTML === '';
+                    blocked = iframe.contentDocument && iframe.contentDocument.body && iframe.contentDocument.body.innerHTML === '';
                 } catch (e) {
-                    // Cross-origin, can't check, so assume it's fine!
-                    isBlank = false;
+                    // Cross-origin or blocked
+                    blocked = true;
                 }
-                if (isBlank) {
+                if (blocked) {
                     panel.innerHTML = '';
                     const warningDiv = document.createElement('div');
                     warningDiv.style.display = 'flex';
@@ -103,7 +102,7 @@ function renderPanels(layout, urls, hasSplit) {
 
                     const msgP = document.createElement('p');
                     msgP.style.margin = '0.5rem 0';
-                    msgP.textContent = 'This site cannot be displayed here.';
+                    msgP.textContent = 'This site does not allow itself to be displayed in iframes. Please open it in a new tab.';
 
                     const openBtn = document.createElement('button');
                     openBtn.textContent = 'Open in new tab';
