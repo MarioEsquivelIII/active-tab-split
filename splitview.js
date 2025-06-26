@@ -145,18 +145,41 @@ window.onload = function () {
     }
 
     renderPanels(layout, urls, hasSplit);
+
+    // Add click event for the Alt+A button
+    const altABtn = document.getElementById('alt-a-btn');
+    if (altABtn) {
+        altABtn.addEventListener('click', function () {
+            window.open(
+                'popup.html',
+                'Active Tab Split',
+                'width=400,height=600,resizable=no'
+            );
+        });
+    }
 };
+
+function openLayoutPicker() {
+    if (chrome && chrome.windows && chrome.runtime && chrome.runtime.getURL) {
+        chrome.windows.create({
+            url: chrome.runtime.getURL('popup.html'),
+            type: 'popup',
+            width: 420,
+            height: 600
+        });
+    }
+}
 
 window.addEventListener('keydown', function (e) {
     if (e.altKey && (e.key === 'a' || e.key === 'A')) {
         // Open the popup window (mini-app)
-        if (chrome && chrome.windows && chrome.runtime && chrome.runtime.getURL) {
-            chrome.windows.create({
-                url: chrome.runtime.getURL('popup.html'),
-                type: 'popup',
-                width: 420,
-                height: 600
-            });
-        }
+        openLayoutPicker();
     }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const layoutPicker = document.getElementById('layout-picker');
+    const panelsContainer = document.getElementById('panels');
+
+    // ... existing code ...
 }); 

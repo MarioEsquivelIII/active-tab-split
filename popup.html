@@ -3,107 +3,179 @@
 <head>
   <title>Active Tab Split</title>
   <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --slate-900: #101828;
+      --slate-700: #344054;
+      --slate-300: #D0D5DD;
+      --slate-200: #E4E7EC;
+      --blue-500: #2E90FA;
+      --blue-600: #1570EF;
+    }
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      margin: 16px;
-      background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
-      color: #222;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background-color: var(--slate-900);
+      color: var(--slate-200);
+      width: 400px;
+      padding: 24px;
+      box-sizing: border-box;
     }
     h3 {
       margin-top: 0;
-      font-weight: 700;
-      letter-spacing: 0.02em;
+      margin-bottom: 16px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      letter-spacing: -0.01em;
     }
     .snap-layouts-grid {
-      display: flex;
-      gap: 18px;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-      justify-content: flex-start;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
     }
     .layout-btn {
-      border: none;
-      background: none;
+      border: 1.5px solid var(--slate-700);
+      background-color: transparent;
       padding: 0;
-      border-radius: 12px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: transform 0.15s cubic-bezier(.4,2,.6,1), box-shadow 0.15s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      outline: none;
-      position: relative;
-    }
-    .layout-btn .snap-icon {
-      width: 56px;
-      height: 38px;
-      border-radius: 10px;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
-      border: 2px solid #e0e7ff;
-      transition: border 0.2s, box-shadow 0.2s;
-    }
-    .layout-btn.selected .snap-icon {
-      border: 2.5px solid #2563eb;
-      box-shadow: 0 0 0 3px #93c5fd;
+      transition: all 0.2s ease-in-out;
+      aspect-ratio: 1.5 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .layout-btn:hover, .layout-btn:focus {
-      transform: scale(1.08);
-      z-index: 2;
+      background-color: var(--slate-700);
+      border-color: var(--blue-500);
+      transform: translateY(-2px);
+    }
+    .layout-btn.selected {
+      border-color: var(--blue-500);
+      background-color: var(--slate-700);
+      box-shadow: 0 0 0 3px var(--blue-600);
     }
     .layout-btn:active {
-      transform: scale(0.97);
+      transform: translateY(0);
     }
-    .one-vertical {
-      background: linear-gradient(90deg, #2563eb 100%, #dbeafe 0);
+    .layout-btn .snap-icon {
+      width: 80%;
+      height: 80%;
+      border-radius: 4px;
+      transition: all 0.2s;
     }
+    .one-vertical { background: var(--slate-300); }
     .two-vertical {
-      background: linear-gradient(90deg, #2563eb 50%, #dbeafe 50%);
+      background: linear-gradient(90deg, var(--slate-300) 48%, var(--slate-700) 48% 52%, var(--slate-300) 52%);
     }
     .three-vertical {
-      background: linear-gradient(90deg, #2563eb 33%, #dbeafe 33% 66%, #2563eb 66%);
+      background: linear-gradient(90deg, var(--slate-300) 30%, var(--slate-700) 30% 35%, var(--slate-300) 35% 65%, var(--slate-700) 65% 70%, var(--slate-300) 70%);
     }
     .two-by-two {
-      background:
-        linear-gradient(90deg, #2563eb 50%, #dbeafe 50%),
-        linear-gradient(180deg, #2563eb 50%, #dbeafe 50%);
-      background-size: 100% 50%, 100% 100%;
-      background-position: 0 0, 0 0;
+      background-color: var(--slate-300);
+      background-image:
+        linear-gradient(to right, transparent 48%, var(--slate-700) 48% 52%, transparent 52%),
+        linear-gradient(to bottom, transparent 48%, var(--slate-700) 48% 52%, transparent 52%);
       background-repeat: no-repeat;
+      background-position: center;
     }
     .submit-btn {
-      padding: 10px 22px;
-      background: linear-gradient(90deg, #2563eb 60%, #60a5fa 100%);
+      width: 100%;
+      padding: 12px;
+      background-color: var(--blue-600);
       color: #fff;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-size: 1rem;
       font-weight: 600;
-      box-shadow: 0 2px 8px rgba(37,99,235,0.08);
-      transition: 0.2s, transform 0.15s;
+      transition: all 0.2s ease-in-out;
     }
     .submit-btn:hover, .submit-btn:focus {
-      background: linear-gradient(90deg, #1d4ed8 60%, #60a5fa 100%);
-      transform: scale(1.04);
+      background-color: var(--blue-500);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(46, 144, 250, 0.2);
     }
     .submit-btn:active {
-      background: linear-gradient(90deg, #1e40af 60%, #3b82f6 100%);
-      transform: scale(0.97);
+      transform: translateY(0);
+      box-shadow: none;
     }
     select {
-      border-radius: 6px;
-      border: 1.5px solid #c7d2fe;
-      padding: 6px 10px;
-      margin: 0 0 8px 0;
-      font-size: 1rem;
-      background: #f1f5f9;
-      transition: border 0.2s;
+      width: 100%;
+      border-radius: 8px;
+      border: 1.5px solid var(--slate-700);
+      padding: 10px 12px;
+      margin: 0 0 10px 0;
+      font-size: 0.95rem;
+      background-color: var(--slate-700);
+      color: var(--slate-200);
+      transition: all 0.2s;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23D0D5DD' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
     }
     select:focus {
-      border: 1.5px solid #2563eb;
+      border-color: var(--blue-500);
       outline: none;
+      box-shadow: 0 0 0 3px var(--blue-600);
     }
     #tabSelectors {
       margin-bottom: 18px;
+    }
+    label {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      margin-right: 1.5em;
+    }
+    input[type="radio"] {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-color: var(--slate-700);
+      margin: 0;
+      margin-right: 0.6em;
+      color: var(--slate-300);
+      width: 1.25em;
+      height: 1.25em;
+      border: 1.5px solid var(--slate-300);
+      border-radius: 50%;
+      transform: translateY(-0.075em);
+      display: grid;
+      place-content: center;
+      transition: all 0.1s ease-in-out;
+    }
+    input[type="radio"]::before {
+      content: "";
+      width: 0.65em;
+      height: 0.65em;
+      border-radius: 50%;
+      transform: scale(0);
+      transition: 120ms transform ease-in-out;
+      box-shadow: inset 1em 1em var(--blue-500);
+    }
+    input[type="radio"]:checked {
+      border-color: var(--blue-500);
+    }
+    input[type="radio"]:checked::before {
+      transform: scale(1);
+    }
+    .tip-text {
+      margin-top: 1.5rem;
+      text-align: center;
+      color: var(--slate-300);
+      font-size: 0.9rem;
+    }
+    .tip-text b {
+      font-weight: 600;
+      color: var(--slate-200);
     }
   </style>
 </head>
@@ -131,15 +203,15 @@
         <input type="radio" name="openMode" value="current" checked>
         Open in current tab
       </label>
-      <label style="margin-left: 1.5em;">
+      <label>
         <input type="radio" name="openMode" value="new">
         Open in new tab
       </label>
     </div>
     <button type="submit" class="submit-btn">Split!</button>
   </form>
-  <div style="margin-top:1.5rem;text-align:center;color:#444;font-size:1.05rem;">
-    <b>Tip:</b> Press <b>Alt + A</b> to open this window from the split view, or use the extension icon as usual.
+  <div class="tip-text">
+    <b>Tip:</b> Press <b>Alt + A</b> to open this window from the split view.
   </div>
   <script src="popup.js"></script>
 </body>
