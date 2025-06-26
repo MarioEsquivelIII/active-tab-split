@@ -1,0 +1,40 @@
+.panels {
+  width: 100%;
+  height: 70vh;
+  gap: 1rem;
+  margin-top: 1rem;
+  display: grid;
+}
+.one-panel {
+  grid-template-columns: 1fr;
+}
+.two-panel {
+  grid-template-columns: 1fr 1fr;
+}
+.three-panel {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.four-panel {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+.panel {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fafafa;
+}
+.panel input {
+  padding: 0.5rem;
+  border: none;
+  border-bottom: 1px solid #eee;
+  outline: none;
+}
+.panel-iframe {
+  flex: 1;
+  width: 100%;
+  border: none;
+  min-height: 200px;
+} 

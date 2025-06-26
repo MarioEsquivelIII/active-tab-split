@@ -1,0 +1,15 @@
+{
+    "manifest_version": 3,
+    "name": "Active Tab Split",
+    "version": "1.0",
+    "description": "Split your Chrome window to view two tabs side by side.",
+    "permissions": [
+        "tabs"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "action": {
+        "default_popup": "popup.html"
+    }
+}

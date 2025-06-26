@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Active Tab Split</title>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: sans-serif; margin: 16px; }
+    .layout-options { display: flex; gap: 8px; margin-bottom: 12px; }
+    .layout-btn { padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; }
+    .layout-btn.selected { background: #007bff; color: #fff; }
+    .tab-list { margin-bottom: 12px; }
+    .tab-item { margin-bottom: 4px; }
+    .submit-btn { padding: 8px 16px; background: #007bff; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+
+    /* Layout Picker CSS from deleted file */
+    .layout-picker {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .layout-btn {
+      border: 2px solid #ccc;
+      background: #fff;
+      padding: 0.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: border 0.2s;
+    }
+    .layout-btn.selected {
+      border-color: #007bff;
+    }
+    .layout-icon {
+      width: 48px;
+      height: 32px;
+      margin-bottom: 0.25rem;
+      background: #eee;
+      border-radius: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .layout-1 {
+      background: #007bff;
+    }
+    .layout-2 {
+      background: linear-gradient(90deg, #007bff 50%, #eee 50%);
+    }
+    .layout-3 {
+      background: linear-gradient(90deg, #007bff 33%, #eee 33% 66%, #007bff 66%);
+    }
+    .layout-4 {
+      background:
+        linear-gradient(90deg, #007bff 50%, #eee 50%),
+        linear-gradient(#007bff 50%, #eee 50%);
+      background-size: 100% 50%, 100% 100%;
+      background-position: 0 0, 0 0;
+      background-repeat: no-repeat;
+    }
+  </style>
+</head>
+<body>
+  <h3>Choose Layout</h3>
+  <div class="layout-options">
+    <button class="layout-btn" data-panels="2">2 Panels</button>
+    <button class="layout-btn" data-panels="3">3 Panels</button>
+    <button class="layout-btn" data-panels="4">4 Panels</button>
+  </div>
+  <h3>Assign Tabs to Panels</h3>
+  <form id="splitForm">
+    <div id="tabSelectors"></div>
+    <button type="submit" class="submit-btn">Split!</button>
+  </form>
+  <script src="popup.js"></script>
+</body>
+</html> 

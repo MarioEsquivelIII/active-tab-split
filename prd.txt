@@ -1,0 +1,81 @@
+# Overview
+Active Tab Split is a React web application that enables
+users to view multiple websites side by side in a 
+single browser window. Inspired by Windows Snap Layouts, 
+it allows users to select from various grid layouts (1, 2, 3, or 4 panels) 
+and assign a different website to each panel. This tool is valuable for 
+multitaskers, researchers, and anyone who needs to monitor or interact 
+with several web resources simultaneously.
+
+# Core Features
+- **Layout Picker**
+  - Allows users to select from predefined layouts (1, 2, 3, or 4 panels) similar to Windows Snap Layouts.
+  - Implemented as a UI component with visual icons for each layout option.
+- **Dynamic Split Panels**
+  - Renders the selected number of panels in the chosen layout using responsive CSS grid/flexbox.
+  - Each panel is independent and can display a different website.
+- **URL Input for Each Panel**
+  - Users can enter a URL for each panel to load the desired website.
+  - Implemented as an input field above or within each panel.
+- **Iframe Display**
+  - Each panel uses an <iframe> to display the entered website.
+  - Note: Some sites may block iframe embedding due to security policies.
+
+# User Experience
+- **User Personas**: Multitaskers, researchers, students, developers, and professionals who need to view multiple sites at once.
+- **Key User Flows**:
+  1. User opens the app and sees the layout picker.
+  2. User selects a layout (e.g., 2 panels).
+  3. User enters URLs for each panel.
+  4. The app displays the websites side by side in the chosen layout.
+- **UI/UX Considerations**:
+  - Clean, modern interface using React components and regular CSS.
+  - Responsive design for various screen sizes.
+  - Visual feedback for selected layout.
+  - Error handling for invalid URLs or blocked iframes.
+
+# Technical Architecture
+- **System Components**:
+  - React frontend (TypeScript, Create React App)
+  - Styling: Regular CSS (CSS modules or global CSS)
+  - State management: React state
+- **Data Models**:
+  - Panel: { id: number, url: string }
+  - Layout: { id: number, type: 'single' | 'double' | 'triple' | 'quad', panels: Panel[] }
+- **APIs and Integrations**:
+  - None required for MVP (all client-side)
+  - (Optional future) Chrome extension APIs for tab management
+- **Infrastructure Requirements**:
+  - Deployable as a static web app (Vercel, Netlify, etc.)
+  - (Optional) Chrome extension packaging
+
+# Development Roadmap
+- **MVP Requirements**:
+  - Layout picker UI
+  - Dynamic rendering of split panels
+  - URL input for each panel
+  - Iframe display for each panel
+  - Responsive and modern UI
+- **Future Enhancements**:
+  - Resizable panels
+  - Save/load layouts
+  - Pick from open Chrome tabs (extension only)
+  - More complex grid options
+  - Drag-and-drop panel rearrangement
+  - Authentication for user-specific layouts
+
+# Logical Dependency Chain
+- Build the layout picker component first as the foundation.
+- Implement dynamic panel rendering based on selected layout.
+- Add URL input and iframe display for each panel.
+- Integrate UI/UX polish and error handling.
+- (Optional) Package as a Chrome extension after web app is stable.
+
+# Risks and Mitigations
+- **Technical challenges**: Some websites may block iframe embedding (X-Frame-Options). Mitigation: Inform users and provide error messages.
+- **MVP scoping**: Focus on core features to avoid scope creep. Mitigation: Defer advanced features to future enhancements.
+- **Resource constraints**: Ensure the app is performant and responsive. Mitigation: Use efficient React patterns and CSS.
+
+# Appendix
+- **Research findings**: Windows Snap Layouts, existing tab split extensions, iframe security limitations.
+- **Technical specifications**: React 18+, TypeScript, regular CSS. 
