@@ -185,6 +185,126 @@ document.addEventListener('DOMContentLoaded', function () {
     const widthValue = document.getElementById('width-value');
     const heightValue = document.getElementById('height-value');
 
+    // Control mode elements
+    const noControlsBtn = document.getElementById('no-controls-btn');
+    const globalOnlyBtn = document.getElementById('global-only-btn');
+    const individualOnlyBtn = document.getElementById('individual-only-btn');
+    const bothControlsBtn = document.getElementById('both-controls-btn');
+    const globalControls = document.getElementById('global-controls');
+    const individualControls = document.getElementById('individual-controls');
+
+    // Store individual panel dimensions
+    let individualPanelSizes = [];
+    let currentLayout = '';
+    let individualControlsActive = false;
+    let controlMode = 'global-only'; // 'no-controls', 'global-only', 'individual-only', 'both'
+
+    // Initialize individual panel sizes
+    function initializeIndividualSizes() {
+        const panels = document.querySelectorAll('.panel');
+        individualPanelSizes = Array.from(panels).map(() => ({
+            width: 100, // percentage
+            height: 100 // percentage
+        }));
+        console.log('Initialized individual panel sizes:', individualPanelSizes);
+    }
+
+    // Control mode switching functions
+    function switchControlMode(mode) {
+        controlMode = mode;
+
+        // Update button states
+        document.querySelectorAll('.control-mode-btn').forEach(btn => btn.classList.remove('active'));
+
+        switch (mode) {
+            case 'no-controls':
+                noControlsBtn.classList.add('active');
+                globalControls.style.display = 'none';
+                if (individualControls) individualControls.style.display = 'none';
+                switchToIndividualMode(false);
+                // Ensure 4-panel layout stays in 2x2 grid for clean view
+                if (currentLayout === 'four-panel') {
+                    setTimeout(() => ensure4PanelGrid(), 50);
+                }
+                break;
+
+            case 'global-only':
+                globalOnlyBtn.classList.add('active');
+                globalControls.style.display = 'flex';
+                if (individualControls) individualControls.style.display = 'none';
+                switchToIndividualMode(false);
+                // Ensure 4-panel layout stays in 2x2 grid
+                if (currentLayout === 'four-panel') {
+                    setTimeout(() => ensure4PanelGrid(), 50);
+                }
+                break;
+
+            case 'individual-only':
+                individualOnlyBtn.classList.add('active');
+                globalControls.style.display = 'none';
+                if (individualControls) individualControls.style.display = 'block';
+                // Force setup individual controls
+                setTimeout(setupIndividualControls, 100);
+                break;
+
+            case 'both':
+                bothControlsBtn.classList.add('active');
+                globalControls.style.display = 'flex';
+                if (individualControls) individualControls.style.display = 'block';
+                // Force setup individual controls
+                setTimeout(setupIndividualControls, 100);
+                break;
+        }
+
+        console.log('Switched to control mode:', mode);
+    }
+
+    // Ensure 4-panel layout maintains 2x2 grid structure
+    function ensure4PanelGrid() {
+        if (currentLayout !== 'four-panel') return;
+
+        const panelsContainer = document.getElementById('panels');
+        const panels = document.querySelectorAll('.panel');
+
+        // Force 2x2 grid setup
+        panelsContainer.style.display = 'grid';
+        panelsContainer.style.gridTemplateColumns = '1fr 1fr';
+        panelsContainer.style.gridTemplateRows = '1fr 1fr';
+        panelsContainer.style.gap = '1rem';
+
+        // Ensure each panel is in correct grid position
+        panels.forEach((panel, index) => {
+            const row = Math.floor(index / 2) + 1; // Row 1 or 2
+            const col = (index % 2) + 1;           // Column 1 or 2
+            panel.style.gridRow = `${row}`;
+            panel.style.gridColumn = `${col}`;
+            panel.style.width = '100%';
+            panel.style.justifySelf = 'stretch';
+            panel.style.alignSelf = 'stretch';
+
+            // Clear any interfering flexbox styles
+            panel.style.flexBasis = '';
+            panel.style.flexGrow = '';
+            panel.style.flexShrink = '';
+        });
+
+        console.log('Enforced 4-panel 2x2 grid structure');
+    }
+
+    // Control mode button event listeners
+    if (noControlsBtn) {
+        noControlsBtn.addEventListener('click', () => switchControlMode('no-controls'));
+    }
+    if (globalOnlyBtn) {
+        globalOnlyBtn.addEventListener('click', () => switchControlMode('global-only'));
+    }
+    if (individualOnlyBtn) {
+        individualOnlyBtn.addEventListener('click', () => switchControlMode('individual-only'));
+    }
+    if (bothControlsBtn) {
+        bothControlsBtn.addEventListener('click', () => switchControlMode('both'));
+    }
+
     // Handle width slider
     widthSlider.addEventListener('input', function () {
         const width = this.value;
@@ -201,6 +321,383 @@ document.addEventListener('DOMContentLoaded', function () {
             panel.style.height = height + 'vh';
         });
     });
+
+    // Switch between grid and individual layout modes
+    function switchToIndividualMode(enable = true) {
+        const panelsContainer = document.getElementById('panels');
+        const panels = document.querySelectorAll('.panel');
+
+        if (enable && !individualControlsActive) {
+            individualControlsActive = true;
+            console.log('Switching to individual control mode');
+
+            if (currentLayout === 'four-panel') {
+                // For 4-panel, ALWAYS maintain 2x2 grid structure
+                panelsContainer.style.display = 'grid';
+                panelsContainer.style.gridTemplateColumns = '1fr 1fr'; // Always 2 columns
+                panelsContainer.style.gridTemplateRows = '1fr 1fr';    // Always 2 rows
+                panelsContainer.style.gap = '1rem'; // Maintain gap
+
+                // Explicitly position each panel in the 2x2 grid
+                panels.forEach((panel, index) => {
+                    // Force explicit grid positioning for 2x2 matrix
+                    const row = Math.floor(index / 2) + 1; // Row 1 or 2
+                    const col = (index % 2) + 1;           // Column 1 or 2
+                    panel.style.gridRow = `${row}`;
+                    panel.style.gridColumn = `${col}`;
+
+                    // Ensure panels fill their grid cells
+                    panel.style.width = '100%';
+                    panel.style.justifySelf = 'stretch';
+                    panel.style.alignSelf = 'stretch';
+
+                    // Reset any interfering styles
+                    panel.style.flexBasis = '';
+                    panel.style.flexGrow = '';
+                    panel.style.flexShrink = '';
+                });
+
+            } else {
+                // For 2-panel and 3-panel, use flexbox
+                panelsContainer.style.display = 'flex';
+                panelsContainer.style.flexWrap = 'nowrap';
+                panelsContainer.style.flexDirection = 'row';
+                panelsContainer.style.gap = '1rem';
+
+                // Reset grid styles that might interfere
+                panelsContainer.style.gridTemplateColumns = '';
+                panelsContainer.style.gridTemplateRows = '';
+
+                // Apply flexbox layout
+                panels.forEach((panel, index) => {
+                    const size = individualPanelSizes[index] || { width: 100, height: 100 };
+                    panel.style.flexBasis = size.width + '%';
+                    panel.style.width = size.width + '%';
+                    panel.style.flexGrow = '0';
+                    panel.style.flexShrink = '1';
+
+                    // Reset grid styles
+                    panel.style.gridRow = '';
+                    panel.style.gridColumn = '';
+                    panel.style.justifySelf = '';
+                    panel.style.alignSelf = '';
+
+                    // Apply height with base height consideration
+                    const baseHeight = parseInt(document.getElementById('height-value').textContent) || 70;
+                    const actualHeight = (baseHeight * size.height / 100);
+                    panel.style.height = actualHeight + 'vh';
+                });
+            }
+
+        } else if (!enable && individualControlsActive) {
+            individualControlsActive = false;
+            console.log('Switching back to grid mode');
+
+            if (currentLayout === 'four-panel') {
+                // For 4-panel, maintain 2x2 grid structure even in global mode
+                panelsContainer.style.display = 'grid';
+                panelsContainer.style.gridTemplateColumns = '1fr 1fr';
+                panelsContainer.style.gridTemplateRows = '1fr 1fr';
+                panelsContainer.style.gap = '1rem';
+
+                // Ensure 2x2 positioning
+                panels.forEach((panel, index) => {
+                    const row = Math.floor(index / 2) + 1;
+                    const col = (index % 2) + 1;
+                    panel.style.gridRow = `${row}`;
+                    panel.style.gridColumn = `${col}`;
+                    panel.style.width = '100%';
+                    panel.style.justifySelf = 'stretch';
+                    panel.style.alignSelf = 'stretch';
+                });
+            } else if (currentLayout === 'three-panel') {
+                // For 3-panel, maintain side-by-side horizontal layout
+                panelsContainer.style.display = 'grid';
+                panelsContainer.style.gridTemplateColumns = '1fr 1fr 1fr';
+                panelsContainer.style.gridTemplateRows = '';
+                panelsContainer.style.gap = '1rem';
+
+                // Reset any individual panel positioning
+                panels.forEach((panel, index) => {
+                    panel.style.gridRow = '';
+                    panel.style.gridColumn = '';
+                    panel.style.width = '';
+                    panel.style.justifySelf = '';
+                    panel.style.alignSelf = '';
+                });
+
+                // Restore original grid class
+                panelsContainer.className = 'panels three-panel';
+            } else if (currentLayout === 'two-panel') {
+                // For 2-panel, maintain side-by-side horizontal layout
+                panelsContainer.style.display = 'grid';
+                panelsContainer.style.gridTemplateColumns = '1fr 1fr';
+                panelsContainer.style.gridTemplateRows = '';
+                panelsContainer.style.gap = '1rem';
+
+                // Reset any individual panel positioning
+                panels.forEach((panel, index) => {
+                    panel.style.gridRow = '';
+                    panel.style.gridColumn = '';
+                    panel.style.width = '';
+                    panel.style.justifySelf = '';
+                    panel.style.alignSelf = '';
+                });
+
+                // Restore original grid class
+                panelsContainer.className = 'panels two-panel';
+            } else {
+                // Reset to original grid layout for other layouts
+                panelsContainer.style.display = 'grid';
+                panelsContainer.style.gridTemplateColumns = '';
+                panelsContainer.style.gridTemplateRows = '';
+                panelsContainer.style.gap = '';
+
+                // Restore original grid classes
+                const originalClass = getGridClass(parseInt(currentLayout.replace('-panel', '')));
+                panelsContainer.className = 'panels ' + originalClass;
+            }
+
+            // Reset flexbox styles
+            panelsContainer.style.flexWrap = '';
+            panelsContainer.style.flexDirection = '';
+            panelsContainer.style.alignContent = '';
+
+            // Reset individual panel styles
+            panels.forEach(panel => {
+                if (currentLayout !== 'four-panel') {
+                    panel.style.width = '';
+                    panel.style.height = '';
+                    panel.style.gridRow = '';
+                    panel.style.gridColumn = '';
+                    panel.style.justifySelf = '';
+                    panel.style.alignSelf = '';
+                }
+                panel.style.flexBasis = '';
+                panel.style.flexGrow = '';
+                panel.style.flexShrink = '';
+            });
+        }
+    }
+
+    // Update individual panel size with responsive grid
+    function updateIndividualPanelSize(panelIndex, newSize, isWidth = true) {
+        if (!individualControlsActive) return;
+
+        const panels = document.querySelectorAll('.panel');
+        const panelsContainer = document.getElementById('panels');
+        const panel = panels[panelIndex];
+
+        if (!panel) return;
+
+        // Update stored size
+        if (isWidth) {
+            individualPanelSizes[panelIndex].width = newSize;
+        } else {
+            individualPanelSizes[panelIndex].height = newSize;
+        }
+
+        if (currentLayout === 'four-panel') {
+            // Get individual panel width preferences
+            const panel1Width = individualPanelSizes[0].width; // Top-left
+            const panel2Width = individualPanelSizes[1].width; // Top-right
+            const panel3Width = individualPanelSizes[2].width; // Bottom-left
+            const panel4Width = individualPanelSizes[3].width; // Bottom-right
+
+            // Calculate column weights based on the larger panel in each column
+            const leftColumnWeight = Math.max(panel1Width, panel3Width);
+            const rightColumnWeight = Math.max(panel2Width, panel4Width);
+
+            // Calculate fractional units to fill all space
+            const totalWeight = leftColumnWeight + rightColumnWeight;
+            const leftFraction = totalWeight > 0 ? leftColumnWeight / totalWeight : 0.5;
+            const rightFraction = totalWeight > 0 ? rightColumnWeight / totalWeight : 0.5;
+
+            // Apply responsive grid that fills all available space
+            panelsContainer.style.display = 'grid';
+            panelsContainer.style.gridTemplateColumns = `${leftFraction}fr ${rightFraction}fr`;
+            panelsContainer.style.gridTemplateRows = '1fr 1fr';
+            panelsContainer.style.gap = '1rem';
+
+            // Make each panel fill its grid cell completely (like CSS Grid reference)
+            panels.forEach((p, index) => {
+                const size = individualPanelSizes[index];
+
+                // Grid positioning
+                const row = Math.floor(index / 2) + 1; // Row 1 or 2
+                const col = (index % 2) + 1;           // Column 1 or 2
+                p.style.gridRow = `${row}`;
+                p.style.gridColumn = `${col}`;
+
+                // Fill grid cell completely - no empty space
+                p.style.width = '100%';
+                p.style.justifySelf = 'stretch';
+
+                // Apply individual height control
+                const baseHeight = parseInt(document.getElementById('height-value').textContent) || 70;
+                const actualHeight = (baseHeight * size.height / 100);
+                p.style.height = actualHeight + 'vh';
+                p.style.alignSelf = 'start';
+            });
+
+            console.log('Grid columns:', `${(leftFraction * 100).toFixed(1)}% | ${(rightFraction * 100).toFixed(1)}%`);
+
+        } else {
+            // For 2-panel and 3-panel flexbox layouts
+            if (isWidth) {
+                const totalPanels = panels.length;
+                const targetTotalWidth = 100 * totalPanels;
+
+                // Calculate current total width
+                const currentTotalWidth = individualPanelSizes.reduce((sum, size) => sum + size.width, 0);
+
+                // If total exceeds target, redistribute the excess
+                if (currentTotalWidth > targetTotalWidth) {
+                    const excess = currentTotalWidth - targetTotalWidth;
+                    const otherPanelCount = totalPanels - 1;
+
+                    if (otherPanelCount > 0) {
+                        const reductionPerPanel = excess / otherPanelCount;
+                        individualPanelSizes.forEach((size, index) => {
+                            if (index !== panelIndex) {
+                                size.width = Math.max(10, size.width - reductionPerPanel);
+                            }
+                        });
+                    }
+                }
+            }
+
+            // Apply the new sizes to all panels
+            panels.forEach((p, index) => {
+                const size = individualPanelSizes[index];
+                p.style.width = size.width + '%';
+                p.style.flexBasis = size.width + '%';
+
+                // Apply height (with base height consideration)
+                const baseHeight = parseInt(document.getElementById('height-value').textContent) || 70;
+                const actualHeight = (baseHeight * size.height / 100);
+                p.style.height = actualHeight + 'vh';
+            });
+        }
+
+        console.log('Updated individual panel sizes:', individualPanelSizes);
+    }
+
+    // Handle individual panel controls
+    function setupIndividualControls() {
+        const panels = document.querySelectorAll('.panel');
+        const individualControls = document.getElementById('individual-controls');
+        const panelControlsGrid = document.getElementById('panel-controls-grid');
+        const panelsContainer = document.getElementById('panels');
+
+        if (!individualControls || !panelControlsGrid) return;
+
+        if (panels.length > 1 && (controlMode === 'individual-only' || controlMode === 'both')) {
+            // Detect current layout
+            const layoutClass = [...panelsContainer.classList].find(cls => cls.includes('-panel'));
+            currentLayout = layoutClass;
+
+            // For 4-panel, ensure it's detected correctly even if panels are stacked
+            if (panels.length === 4 && !currentLayout) {
+                currentLayout = 'four-panel';
+            }
+
+            individualControls.style.display = 'block';
+            panelControlsGrid.innerHTML = '';
+
+            // Initialize individual panel sizes and switch to individual mode
+            initializeIndividualSizes();
+            switchToIndividualMode(true);
+
+            // Extra enforcement for 4-panel layout
+            if (currentLayout === 'four-panel') {
+                setTimeout(() => ensure4PanelGrid(), 50);
+            }
+
+            panels.forEach((panel, index) => {
+                const panelNum = index + 1;
+                panel.id = `panel-${panelNum}`;
+
+                const controlDiv = document.createElement('div');
+                controlDiv.className = 'individual-panel-control';
+                controlDiv.innerHTML = `
+                    <h4>Panel ${panelNum}</h4>
+                    <div class="panel-control-row">
+                        <label>Width:</label>
+                        <input type="range" class="panel-width-slider" data-panel="${panelNum}" data-index="${index}" min="10" max="200" value="100" step="5">
+                        <span class="panel-width-value">100%</span>
+                    </div>
+                    <div class="panel-control-row">
+                        <label>Height:</label>
+                        <input type="range" class="panel-height-slider" data-panel="${panelNum}" data-index="${index}" min="20" max="200" value="100" step="5">
+                        <span class="panel-height-value">100%</span>
+                    </div>
+                `;
+                panelControlsGrid.appendChild(controlDiv);
+            });
+
+            // Add event listeners to all panel control sliders
+            document.querySelectorAll('.panel-width-slider').forEach(slider => {
+                slider.addEventListener('input', function () {
+                    const panelIndex = parseInt(this.dataset.index);
+                    const percentage = parseInt(this.value);
+                    const valueSpan = this.parentElement.querySelector('.panel-width-value');
+
+                    if (valueSpan) {
+                        valueSpan.textContent = percentage + '%';
+                        updateIndividualPanelSize(panelIndex, percentage, true);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.panel-height-slider').forEach(slider => {
+                slider.addEventListener('input', function () {
+                    const panelIndex = parseInt(this.dataset.index);
+                    const percentage = parseInt(this.value);
+                    const valueSpan = this.parentElement.querySelector('.panel-height-value');
+
+                    if (valueSpan) {
+                        valueSpan.textContent = percentage + '%';
+                        updateIndividualPanelSize(panelIndex, percentage, false);
+                    }
+                });
+            });
+
+            console.log('Individual controls setup complete for layout:', currentLayout);
+        } else {
+            if (controlMode !== 'individual-only') {
+                individualControls.style.display = 'none';
+            }
+            // Switch back to grid mode when no individual controls or in global-only/no-controls mode
+            if (controlMode === 'global-only' || controlMode === 'no-controls') {
+                switchToIndividualMode(false);
+            }
+        }
+    }
+
+    // Watch for panel changes and setup controls
+    const observer = new MutationObserver(function (mutations) {
+        mutations.forEach(mutation => {
+            if (mutation.type === 'childList' || mutation.type === 'attributes') {
+                console.log('Panel changes detected, reinitializing controls');
+                setTimeout(setupIndividualControls, 100);
+            }
+        });
+    });
+
+    observer.observe(panelsContainer, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class']
+    });
+
+    // Initial setup
+    setTimeout(() => {
+        setupIndividualControls();
+        // Set initial control mode
+        switchControlMode('global-only');
+    }, 500);
 
     // ... existing code ...
 }); 

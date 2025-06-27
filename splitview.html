@@ -18,16 +18,32 @@
   </select>
   
   <h1>Split View</h1>
-  <div class="control-panel">
+  
+  <div class="control-mode-panel">
+    <div class="control-mode-buttons">
+      <button id="no-controls-btn" class="control-mode-btn">No Controls</button>
+      <button id="global-only-btn" class="control-mode-btn active">Global Only</button>
+      <button id="individual-only-btn" class="control-mode-btn">Individual Only</button>
+      <button id="both-controls-btn" class="control-mode-btn">Both Controls</button>
+    </div>
+  </div>
+
+  <div class="control-panel" id="global-controls">
     <div class="control-group">
-      <label for="width-slider">Panel Width:</label>
+      <label for="width-slider">Global Panel Width:</label>
       <input type="range" id="width-slider" min="40" max="100" value="98" step="1">
       <span id="width-value">98%</span>
     </div>
     <div class="control-group">
-      <label for="height-slider">Panel Height:</label>
+      <label for="height-slider">Global Panel Height:</label>
       <input type="range" id="height-slider" min="40" max="100" value="70" step="1">
       <span id="height-value">70%</span>
+    </div>
+  </div>
+  
+  <div class="individual-controls" id="individual-controls" style="display: none;">
+    <h3>Individual Panel Controls</h3>
+    <div class="panel-controls-grid" id="panel-controls-grid">
     </div>
   </div>
   

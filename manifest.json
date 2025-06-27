@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "Active Tab Split",
+    "name": "Split View",
     "version": "1.0",
-    "description": "Split your Chrome window to view multiple tabs side by side.",
+    "description": "Split your Chrome window to view multiple tabs side by side. You can control the size of the panels and the tabs individually.",
     "action": {
         "default_popup": "popup.html"
     },

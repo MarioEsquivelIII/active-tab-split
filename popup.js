@@ -75,7 +75,7 @@ function renderTabSelectors() {
             ) {
                 const option = document.createElement('option');
                 option.value = tab.id;
-                option.textContent = tab.title || tab.url;
+                option.textContent = tab.displayTitle || tab.title || tab.url;
                 select.appendChild(option);
             }
         });
@@ -104,7 +104,16 @@ function setLayoutButtons() {
 
 chrome.tabs.query({ currentWindow: true, active: true }, (activeTabs) => {
     chrome.tabs.query({ currentWindow: true }, (tabs) => {
-        allTabs = tabs;
+        // Flatten grouped tabs - show all tabs individually regardless of grouping
+        allTabs = tabs.map(tab => {
+            // If tab is in a group, we still treat it as an individual tab
+            // Chrome's tab.groupId property indicates if a tab is grouped
+            return {
+                ...tab,
+                displayTitle: tab.groupId !== -1 ? `📁 ${tab.title}` : tab.title
+            };
+        });
+
         setLayoutButtons();
         renderTabSelectors();
         window.activeTabId = activeTabs[0].id;
