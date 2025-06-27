@@ -6,21 +6,34 @@
   <meta charset="UTF-8">
 </head>
 <body>
-  <div style="display: flex; justify-content: space-between; align-items: center; margin: 1rem; gap: 1rem;">
-    <h1 style="margin: 0; text-align: center; flex: 1;">Active Tab Split</h1>
+  <div class="tip-corner" id="tip-section">
+    <b>Tip:</b> Press <b>Alt + A</b> to open the layout popup window, or use the extension icon as usual.
   </div>
+  
   <select id="layout-picker">
     <option value="1">1 Panel</option>
     <option value="2">2 Panels</option>
     <option value="3">3 Panels</option>
     <option value="4">4 Panels</option>
   </select>
+  
+  <h1>Split View</h1>
+  <div class="control-panel">
+    <div class="control-group">
+      <label for="width-slider">Panel Width:</label>
+      <input type="range" id="width-slider" min="40" max="100" value="98" step="1">
+      <span id="width-value">98%</span>
+    </div>
+    <div class="control-group">
+      <label for="height-slider">Panel Height:</label>
+      <input type="range" id="height-slider" min="40" max="100" value="70" step="1">
+      <span id="height-value">70%</span>
+    </div>
+  </div>
+  
   <div id="panels"></div>
   
   <div class="bottom-row-container">
-    <div class="bottom-note" style="margin-bottom:0.5rem;" id="tip-section">
-      <b>Tip:</b> Press <b>Alt + A</b> to open the layout popup window, or use the extension icon as usual.
-    </div>
     <div class="bottom-note">
       <b>Note:</b> Some sites (like Google, Facebook, etc.) do <b>not</b> allow themselves to be displayed in iframes. If you see a browser error or a sad file icon, please open the site in a new tab.
     </div>

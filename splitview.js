@@ -180,6 +180,27 @@ window.addEventListener('keydown', function (e) {
 document.addEventListener('DOMContentLoaded', function () {
     const layoutPicker = document.getElementById('layout-picker');
     const panelsContainer = document.getElementById('panels');
+    const widthSlider = document.getElementById('width-slider');
+    const heightSlider = document.getElementById('height-slider');
+    const widthValue = document.getElementById('width-value');
+    const heightValue = document.getElementById('height-value');
+
+    // Handle width slider
+    widthSlider.addEventListener('input', function () {
+        const width = this.value;
+        widthValue.textContent = width + '%';
+        panelsContainer.style.maxWidth = width + 'vw';
+    });
+
+    // Handle height slider
+    heightSlider.addEventListener('input', function () {
+        const height = this.value;
+        heightValue.textContent = height + 'vh';
+        const panels = document.querySelectorAll('.panel');
+        panels.forEach(panel => {
+            panel.style.height = height + 'vh';
+        });
+    });
 
     // ... existing code ...
 }); 
